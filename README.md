@@ -1,8 +1,21 @@
 # Excel Skill
 
-不是 Excel 教程，是 **AI 友好的 Excel 知识库 + 4 大行业模板 + Python 自动化工具**。
+> 不是 Excel 教程，是 **AI 友好的 Excel 知识库 + 5 大行业模板 + 健康度诊断 + Python 自动化工具**。
 
 让 Cursor / Claude Code / Codex 等 AI agent 能根据你的需求**生成可直接用的 Excel 文件 / 公式 / 透视表 / Dashboard**，而不是查文档查到崩溃。
+
+## v2 新增
+
+| 模块 | 作用 |
+|---|---|
+| `scripts/analyze.py` | 给现有 .xlsx 做"健康度诊断"（10 类常见坑：中文逗号、`#REF!`、整列引用、sheet 名违规等）|
+| `scripts/generate_saas/unit_economics.py` | 第 5 个行业 vertical：SaaS LTV / CAC / Cohort / P&L Projection |
+| `tests/test_generators.py` | 5 个 generator 的集成测试（跑完产出能被 openpyxl 读回 + 无 #REF!） |
+| `tests/test_analyze.py` | `analyze.py` 的 7 个 check 项测试 |
+| `references/04-vba-vs-python.md` | VBA vs Python 决策矩阵 |
+| `references/06-cell-protection.md` | 单元格保护 + 数据校验 |
+| `references/07-charts-and-formatting.md` | 图表类型 + 专业配色（避免 "AI 蓝紫" 既视感） |
+| `.github/workflows/test.yml` | CI 跑全套 pytest |
 
 ---
 

@@ -325,7 +325,11 @@ def main() -> int:
     wb.save(out)
 
     print()
-    print(f'✓ 模板已生成：{out.absolute()}')
+    msg = f'[OK] 模板已生成：{out.absolute()}'
+    try:
+        print(msg)
+    except UnicodeEncodeError:
+        sys.stdout.buffer.write((msg + '\n').encode('utf-8'))
     print()
     print('注意：openpyxl 写入的公式在文件层面只是字符串。')
     print('用 Excel 打开会自动重算；或者跑 python scripts/recalc.py 让 LibreOffice 重算。')
