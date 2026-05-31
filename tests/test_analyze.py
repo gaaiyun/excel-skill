@@ -85,6 +85,33 @@ def test_xa009_whole_column_reference(tmp_path: Path):
     assert 'XA009' in codes
 
 
+def test_xa008_merged_cells_detected(tmp_path: Path):
+    """合并单元格应触发 XA008 info（回归：openpyxl 3.1+ 的 CellRange.size 是 dict，
+    旧代码 `size > 1` 直接 TypeError 让整个 analyze 崩）。"""
+    def builder(wb):
+        ws = wb.active
+        ws['A1'] = '标题'
+        ws.merge_cells('A1:C1')
+    p = _make_xlsx(tmp_path, builder)
+    r = analyze_workbook(p)   # 不应抛 TypeError
+    info_codes = {f.code for f in r.findings if f.severity == 'info'}
+    assert 'XA008' in info_codes
+
+
+def test_analyze_workbook_with_merges_does_not_crash(tmp_path: Path):
+    """单格合并 / 多格合并混合，analyze_workbook 应正常跑完。"""
+    def builder(wb):
+        ws = wb.active
+        ws.title = 'Data'
+        ws['A1'] = 1
+        ws.merge_cells('A1:A1')   # 退化单格
+        ws['B1'] = 2
+        ws.merge_cells('B1:D2')   # 真多格
+    p = _make_xlsx(tmp_path, builder)
+    r = analyze_workbook(p)
+    assert r.to_dict()['summary']['total'] >= 1
+
+
 def test_report_to_dict_has_summary(tmp_path: Path):
     def builder(wb):
         ws = wb.active

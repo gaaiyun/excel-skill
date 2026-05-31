@@ -27,6 +27,8 @@ def _run_generator(module_relpath: str, args: list[str], cwd: Path) -> subproces
         cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",       # generator 输出含中文 / ✓，Windows 下不能用 GBK 解码
+        errors="replace",
         timeout=60,
     )
 
