@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-analyze.py — 给现有 .xlsx 文件做"健康度诊断"。
+analyze.py — 给现有 .xlsx 文件做"健康度诊断"（读 Excel 找问题，与生成器相反）。
 
-不是生成 Excel，而是**读 Excel 找问题**。
 对应日常痛点：接手了一份别人的 Excel，公式可能错、可能循环引用、可能有
 未保护的输入区被覆盖。本工具静态扫描后给出修复建议。
 
@@ -199,7 +198,11 @@ def _check_merged_cells(wb: Workbook, report: Report) -> None:
         for merged_range in ws.merged_cells.ranges:
             # 合并区域被公式引用时，引用左上角才有值；老手都知道，但易踩
             # 这里只 info 提示用户：注意合并区被引用的坑
-            if merged_range.size > 1:
+            # openpyxl 3.1+ 的 CellRange.size 是 {'columns': n, 'rows': m}，
+            # 取格数乘积判断是否真的跨多格。
+            size = merged_range.size
+            n_cells = size['columns'] * size['rows'] if isinstance(size, dict) else size
+            if n_cells > 1:
                 report.add('info', 'XA008', sheet_name, str(merged_range),
                            '合并单元格存在 — 引用时只有左上角有值',
                            fix='避免在数据区合并；表头合并是 OK 的')

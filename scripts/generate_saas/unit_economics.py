@@ -154,14 +154,6 @@ def _build_unit_economics(wb: Workbook, args) -> None:
     ws.column_dimensions['B'].width = 16
 
     rows = [
-        ('CAC（每客户获取成本）', '=Assumptions!B5'),
-        ('ARPU（每月）', '=Assumptions!B2'),
-        ('Gross Margin', '=Assumptions!B3'),
-        ('Monthly Churn', '=Assumptions!B4'),
-        ('Contribution Margin per Month', '=B3*B4'),  # ARPU * GM ... no wait
-    ]
-    # 重新定义：让公式严格清楚
-    rows = [
         ('CAC', '=Assumptions!B5'),
         ('ARPU/月', '=Assumptions!B2'),
         ('Gross Margin', '=Assumptions!B3'),
